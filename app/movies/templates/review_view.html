@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block content %}
 
-</body>
-</html>
+    <div class="row mt-5">
+
+         <div class="border border-1 border-dark mx-auto p-4">
+             <h2>User profile</h2>
+                Movie Name: {{ movie.title }}
+                <pre>{{ movie.latitude }}</pre>
+                <pre>{{ movie.longitude }}</pre>
+                <pre>{{ movie.population }}</pre>
+         </div>
+    </div>
+
+{% endblock %}

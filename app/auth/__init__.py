@@ -2,10 +2,10 @@ from flask import Blueprint, render_template, redirect, url_for, flash,current_a
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash
 
+from app.auth.decorators import admin_required
 from app.auth.forms import login_form, register_form
 from app.db import db
 from app.db.models import User
-
 
 auth = Blueprint('auth', __name__, template_folder='templates')
 
@@ -26,7 +26,7 @@ def register():
         else:
             flash('Already Registered')
             return redirect(url_for('auth.login'), 302)
-    return render_template('templates/register.html', form=form)
+    return render_template('register.html', form=form)
 
 @auth.route('/login', methods=['POST', 'GET'])
 def login():
@@ -45,7 +45,7 @@ def login():
             login_user(user)
             flash("Welcome", 'success')
             return redirect(url_for('auth.dashboard'))
-    return render_template('templates/login.html', form=login_form())
+    return render_template('login.html', form=form)
 
 @auth.route("/logout")
 @login_required

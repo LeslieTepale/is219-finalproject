@@ -11,10 +11,3 @@ def index():
         return render_template('index.html')
     except TemplateNotFound:
         abort(404)
-
-@simple_pages.route('/welcome')
-def welcome():
-    try:
-        return render_template('welcome.html')
-    except TemplateNotFound:
-        abort(404)

@@ -4,8 +4,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy.orm import relationship
 from app.db import db
 from flask_login import UserMixin
-from sqlalchemy_serializer import SerializerMixin
-
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -36,9 +34,8 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User %r>' % self.email
 
-class Movies(db.Model, SerializerMixin):
-    __tablename__ = 'locations'
-    serialize_only = ('title', 'longitude', 'latitude')
+class Movies(db.Model):
+    __tablename__ = 'movies'
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(300), nullable=True, unique=False)
@@ -46,7 +43,7 @@ class Movies(db.Model, SerializerMixin):
     review = db.Column(db.String, nullable=True, unique=False)
     date = db.Column(db.String, nullable=True, unique=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    user = relationship("User", back_populates="locations", uselist=False)
+    user = relationship("User", back_populates="movies", uselist=False)
 
     def __init__(self, title, rating, review, date):
         self.title = title
