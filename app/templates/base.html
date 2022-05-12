@@ -5,14 +5,14 @@
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
         {% block styles %}
             <!-- Bootstrap CSS -->
             {{ bootstrap.load_css() }}
         {% endblock %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
         <title>My Site - {% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
     {% endblock %}
 </head>
 <body>
@@ -32,35 +32,14 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <div class="navbar-nav mr-auto">
-                        {% if current_user.is_authenticated %}
-                            {{ render_nav_item('auth.dashboard','Dashboard' ) }}
-                            {% if current_user.is_admin %}
-                                {{ render_nav_item('auth.browse_users','User Management' ) }}
-                            {% endif %}
 
-                        {% else %}
-                            {{ render_nav_item('simple_pages.index', 'Home') }}
-                        {% endif %}
-
-                        {{ render_nav_item('simple_pages.about','About') }}
+                        {{ render_nav_item('simple_pages.index', 'Home') }}
                         {{ render_nav_item('simple_pages.welcome','Welcome') }}
                     </div>
                 </div>
                 <div class="navbar-nav d-flex">
-                    {% if current_user.is_authenticated %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                My Account
-                            </a>
-                            <ul class="dropdown-menu " aria-labelledby="navbarDarkDropdownMenuLink">
-                                <li><a class="dropdown-item" href="{{ url_for("auth.logout") }}">Logout</a></li>
-                            </ul>
-                        </li>
-                    {% else %}
-                        {{ render_nav_item('auth.register','Register' ) }}
-                        {{ render_nav_item('auth.login','Login' ) }}
-                    {% endif %}
+                    {{ render_nav_item('auth.register','Register' ) }}
+                    {{ render_nav_item('auth.login','Login' ) }}
                 </div>
             </nav>
         </header>

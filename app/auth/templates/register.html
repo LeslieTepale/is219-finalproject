@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block content %}
+    {% from 'bootstrap5/form.html' import render_form, render_field, render_form_row %}
+
+    <div class="row">
+        <div class="col-7">
+            <h2>Register</h2>
+            {{ render_form(form) }}
+        </div>
+        <div id="message" class="col-5">
+            <div id="letter" class="red">
+                Has lower case letter
+                <div class="progress">
+                    <div id="p-bar" class="progress-bar" style="width: 0%" role="progressbar" aria-valuenow="0"
+                         aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <style>
+        .invalid {
+            color: red;
+        }
+
+        .valid {
+            color: green;
+        }
+    </style>
+    <script>
+    var passwordField = document.getElementById("password");
+        var letter = document.getElementById("letter");
+        var lowerCase = 0;
+
+        passwordField.onfocus = function () {
+            var message = document.getElementById("message");
+            message.style.display = "block";
+            message.style.border = "1px solid";
+        }
+
+        passwordField.onkeyup = function () {
+            var progress_bar = document.getElementById("p-bar");
+            var width = 0;
+            var width_value = "";
+
+            width_value = width.toString() + "%";
+            progress_bar.style.width = width_value;
+
+            var lowerCaseLetters = /[a-z]/g;
+            if(passwordField.value.match(lowerCaseLetters)) {
+                document.getElementById("lowercase").innerHTML = "has lower case letter";
+                width += 25;
+                width_value = width.toString() + "%";
+                progress_bar.style.width = width_value;
+            } else {
+                document.getElementById("lowercase").innerHTML = "" ;
+                if(width > 0) {width -= 25;}
+                width_value = width.toString() + "%";
+                progress_bar.style.width = width_value;
+            }
+
+            // Validate capital letters
+            var upperCaseLetters = /[A-Z]/g;
+            if(passwordField.value.match(upperCaseLetters)) {
+                document.getElementById("uppercase").innerHTML = "has upper case letter" ;
+                width += 25;
+                width_value = width.toString() + "%";
+                progress_bar.style.width = width_value;
+            } else {
+                document.getElementById("uppercase").innerHTML = "";
+                if(width > 0) width -= 25;
+                width_value = width.toString() + "%";
+                progress_bar.style.width = width_value;
+            }
+
+            // Validate numbers
+            var numbers = /[0-9]/g;
+            if(passwordField.value.match(numbers)) {
+                document.getElementById("number").innerHTML = "has number";
+                width += 25;
+                width_value = width.toString() + "%";
+                progress_bar.style.width = width_value;
+            } else {
+                document.getElementById("number").innerHTML = "";
+                if(width > 0) width -= 25;
+                width_value = width.toString() + "%";
+                progress_bar.style.width = width_value;
+            }
+
+            // Validate length
+            if(passwordField.value.length >= 8) {
+                document.getElementById("length").innerHTML = "has a minimum length of 8";
+                width += 25;
+                width_value = width.toString() + "%";
+                progress_bar.style.width = width_value;
+            } else {
+                document.getElementById("length").innerHTML = "";
+                if(width > 0) width -= 25;
+                width_value = width.toString() + "%";
+                progress_bar.style.width = width_value;
+            }
+
+            if(progress_bar.style.width === "100%"){
+                progress_bar.style.backgroundColor = "green";
+            } else progress_bar.style.backgroundColor = "tomato";
+        }
+    </script>
+
+{% endblock %}
