@@ -13,13 +13,11 @@ from app.movies.forms import movie_register_form, movie_edit_form
 from werkzeug.utils import secure_filename, redirect
 from flask import Response
 
-
-
 movies = Blueprint('movies', __name__,template_folder='templates')
 
 @movies.route('/movies', methods=['GET'], defaults={"page": 1})
 @movies.route('/movies/<int:page>', methods=['POST','GET'])
-def browse_locations(page):
+def browse_movies(page):
     page = page
     per_page = 10
     pagination = Movies.query.paginate(page, per_page, error_out=False)
@@ -40,49 +38,56 @@ def browse_locations(page):
 
 @movies.route('/movies/<int:movies_id>')
 @login_required
-def retrieve_location(movies_id):
+def retrieve_movies(movies_id):
     movies = Movies.query.get(movies_id)
     return render_template('review_view.html', movies=Movies)
 
 
 @movies.route('/movies/<int:movies_id>/edit', methods=['POST', 'GET'])
 @login_required
-def edit_locations(movie_id):
-    location = Location.query.get(location_id)
-    form = location_edit_form(obj=location)
+def edit_movies(movies_id):
+    movie = Movies.query.get(movies_id)
+    form = movie_edit_form(obj=movie)
     if form.validate_on_submit():
-        location.title = form.title.data
-        db.session.add(location)
+        movie.title = form.title.data
+        db.session.add(movie)
         db.session.commit()
         flash('Location Edited Successfully', 'success')
-        current_app.logger.info("edited a location")
-        return redirect(url_for('map.browse_locations'))
-    return render_template('location_edit.html', form=form)
+        current_app.logger.info("edited a movie review")
+        return redirect(url_for('movies.browse_movies'))
+    return render_template('review_edit.html', form=form)
 
 
-@movies.route('/locations/new', methods=['POST', 'GET'])
+@movies.route('/movies/new', methods=['POST', 'GET'])
 @login_required
-def add_location():
-    form = location_register_form()
+def add_movie():
+    form = movie_register_form()
     if form.validate_on_submit():
-        location = Location.query.filter_by(title=form.title.data).first()
-        if location is None:
-            location = Location(title=form.title.data, longitude=form.longitude.data, latitude=form.latitude.data, population=form.population.data)
-            db.session.add(location)
+        movie = Movies.query.filter_by(title=form.title.data).first()
+        if movie is None:
+            movie = Movies(title=form.title.data, rating=form.rating.data, review=form.review.data, date=form.date.data)
+            db.session.add(movie)
             db.session.commit()
-            flash('Congratulations, you just created a location', 'success')
-            return redirect(url_for('map.browse_locations'))
+            flash('Congratulations, you just entered a new review', 'success')
+            return redirect(url_for('map.browse_movies'))
         else:
             flash('Already Registered')
             return redirect(url_for('map.locations'))
-    return render_template('location_new.html', form=form)
+    return render_template('review_new.html', form=form)
 
 
-@map.route('/locations/<int:location_id>/delete', methods=['POST'])
+@movies.route('/movies/<int:movies_id>/delete', methods=['POST'])
 @login_required
-def delete_location(location_id):
-    location = Location.query.get(location_id)
-    db.session.delete(location)
+def delete_movie(movies_id):
+    movie = Movies.query.get(movies_id)
+    db.session.delete(movie)
     db.session.commit()
-    flash('Location Deleted', 'success')
-    return redirect(url_for('map.browse_locations'), 302)
+    flash('Review Deleted', 'success')
+    return redirect(url_for('movies.browse_movies'), 302)
+
+def showMovies():
+    try:
+        return render_template('review_new.html')
+    except TemplateNotFound:
+        abort(404)
+

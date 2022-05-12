@@ -15,6 +15,7 @@ class User(UserMixin, db.Model):
     registered_on = db.Column('registered_on', db.DateTime)
     active = db.Column('is_active', db.Boolean(), nullable=False, server_default='1')
     is_admin = db.Column('is_admin', db.Boolean(), nullable=False, server_default='0')
+    movies = db.relationship("Movies", back_populates="user", cascade="all, delete")
     def __init__(self, email, password):
         self.email = email
         self.password = password
