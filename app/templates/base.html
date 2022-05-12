@@ -13,6 +13,7 @@
 
         <title>My Site - {% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+
     {% endblock %}
 </head>
 <body>
@@ -32,14 +33,29 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <div class="navbar-nav mr-auto">
-
-                        {{ render_nav_item('simple_pages.index', 'Home') }}
+                        {% if current_user.is_authenticated %}
+                            {{ render_nav_item('auth.dashboard','Dashboard' ) }}
+                        {% else %}
+                            {{ render_nav_item('simple_pages.index', 'Home') }}
+                        {% endif %}
                         {{ render_nav_item('simple_pages.welcome','Welcome') }}
                     </div>
                 </div>
                 <div class="navbar-nav d-flex">
-                    {{ render_nav_item('auth.register','Register' ) }}
-                    {{ render_nav_item('auth.login','Login' ) }}
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                My Account
+                            </a>
+                            <ul class="dropdown-menu " aria-labelledby="navbarDarkDropdownMenuLink">
+                                <li><a class="dropdown-item" href="{{ url_for("auth.logout") }}">Logout</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        {{ render_nav_item('auth.register','Register' ) }}
+                        {{ render_nav_item('auth.login','Login' ) }}
+                    {% endif %}
                 </div>
             </nav>
         </header>
@@ -55,12 +71,16 @@
     </div>
 </div>
 
+
+
+
 {% block scripts %}
     <!-- Optional JavaScript -->
     {{ bootstrap.load_js() }}
+
 {% endblock %}
 <footer class="text-center mt-5">
-    Environment: {{ deployment_environment }} - Copyright: {{ year }} {{ format_price(100) }}
+    Environment: {{ deployment_environment }} - Copyright: {{ year }}
 </footer>
 </body>
 </html>
