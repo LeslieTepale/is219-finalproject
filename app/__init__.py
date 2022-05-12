@@ -24,6 +24,6 @@ def create_app():
 
     @app.route('/')
     def hello():
-        return 'is it working?'
+        return 'is it still working?'
 
     return app
